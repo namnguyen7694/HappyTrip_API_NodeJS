@@ -1,5 +1,5 @@
 const express = require('express');
-const tripController = require('./tripControl');
+const tripController = require('./trips');
 const {authenticate, authorize} = require ('../../../middlewares/auth');
 
 const router = express.Router();

@@ -1,5 +1,5 @@
 const {Ticket} =require ('../../../models/Ticket');
-const {User} = require('../../../models//User');
+const {User} = require('../../../models/User');
 const {Trip} = require ('../../../models/Trip');
 const {sendBookingTicketEmail} = require('../../../services/email/sendBookingTicket');
 module.exports.createTicket = (req, res, next) =>{

@@ -1,10 +1,10 @@
 const express = require('express');
-const tiketController = require ('./ticketControl')
+const ticketController = require ('./tickets')
 const router = express.Router();
 const {authenticate, authorize} = require ('../../../middlewares/auth');
 
 router.post('/booking', 
     authenticate, 
     // authorize(["client"]), 
-    tiketController.createTicket)
+    ticketController.createTicket)
 module.exports = router;
