@@ -2,6 +2,7 @@ const {Ticket} =require ('../../../models/Ticket');
 const {User} = require('../../../models/User');
 const {Trip} = require ('../../../models/Trip');
 const {sendBookingTicketEmail} = require('../../../services/email/sendBookingTicket');
+
 module.exports.createTicket = (req, res, next) =>{
     const {tripId, seatCodes} = req.body;
     const user = req.user  //token
@@ -9,6 +10,7 @@ module.exports.createTicket = (req, res, next) =>{
     Trip.findById(tripId)
         .populate("fromStation") //xuat thong tin Obj ID sang text
         .populate("toStation")
+        .populate("company")
         .then(trip =>{
             if (!trip) return Promise.reject({status : 404 , message: "trip not found"})  //viet trong validate
             const availableSeatCodes = trip.seats
@@ -28,7 +30,7 @@ module.exports.createTicket = (req, res, next) =>{
 
             const newTicket = new Ticket ({
                 tripId,
-                user,  //set default vi chua co token userId
+                userId: user.userId,  
                 seats : seatCodes.map( seat => ({
                     isBooked : true,   //ghế đã được book trong vé
                     code: seat
@@ -53,4 +55,12 @@ module.exports.createTicket = (req, res, next) =>{
         .catch((err)=>{
             res.status(400).json({message: err})
         })
+}
+
+module.exports.getTickets = (req, res, next) => {
+    Ticket.find()
+        .populate("userId", "fullName email")
+        .populate("tripId", "fromStation toStation company price carType")
+        .then(tickets => res.status(200).json(tickets)) 
+        .catch(err => res.status(500).json(err))
 }

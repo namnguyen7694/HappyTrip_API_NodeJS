@@ -12,6 +12,11 @@ const TripSchema = new mongoose.Schema({
     },
     seats: [SeatSchema],
     startTime: {type: Date, required: true},
+    company: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Company'
+    },
+    carType: {type: String, required: true},
     price: {type: Number, required: true}
 })
 

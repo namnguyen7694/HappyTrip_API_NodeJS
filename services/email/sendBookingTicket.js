@@ -28,6 +28,8 @@ module.exports.sendBookingTicketEmail = (ticket, trip, user) =>{
             email: user.email,
             fromStation: `${trip.fromStation.name}, ${trip.fromStation.address}`,
             toStation: `${trip.toStation.name}, ${trip.toStation.address}`,
+            company: trip.company.name,
+            carType: trip.carType,
             price: trip.price,
             amount: ticket.seats.length,
             seats: ticket.seats.map(s =>s.code).toString(),

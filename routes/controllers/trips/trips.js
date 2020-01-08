@@ -1,21 +1,24 @@
 const {Trip} = require('../../../models/Trip') ;
 const {Seat} = require('../../../models/Seat');
-//creat seatCode
-const seatCodes = [
-    "A01", "A02", "A03", "A04", "A05", "A06", "A07", "A08",
-    "B01", "B02", "B03", "B04", "B05", "B06", "B07", "B08"
-]
+const carTypes = require('../companies/carTypes.json');
 
 //create Trip
 module.exports.createTrip = (req, res, next) => {
-    const {fromStation, toStation, startTime, price} = req.body;
+    const {fromStation, toStation, startTime, company, carType, price} = req.body;
+    let seatCodes = [];
+    for (let types of carTypes) {
+        if (types.carType === carType) {
+            seatCodes = types.seats
+        } 
+    };
+    ;
     let seats = [];
     seatCodes.forEach( code => {
         const seat = new Seat({code , isBooked : false})
         seats.push(seat);
     })
     
-    const newTrip = new Trip({fromStation, toStation, seats, startTime, price})
+    const newTrip = new Trip({fromStation, toStation, seats, startTime,company, carType, price})
     newTrip.save()
         .then(trip => res.status(201).json(trip)) //status 201 created --> send JSON respone
         .catch(err => res.status(500).json(err))
@@ -23,6 +26,9 @@ module.exports.createTrip = (req, res, next) => {
 //get all trips
 module.exports.getTrips = (req,res,next) => {
     Trip.find()
+    .populate("fromStation", "name province")
+    .populate("toStation", "name province")
+    .populate("company", "name -_id")
     .then(trips => res.status(200).json(trips))  //status 200 getted
     .catch(err => res.status(500).json(err))
 }
@@ -30,14 +36,21 @@ module.exports.getTrips = (req,res,next) => {
 module.exports.getTripById = (req,res,next) => {
     const {id} = req.params;  //object co cac thuoc tinh truyen vao khi get
     Trip.findById(id)
+    .populate("fromStation", "name")
+    .populate("toStation", "name")
+    .populate("company", "name")
     .then(trip => res.status(200).json(trip))
     .catch(err => res.status(500).json(err))
+}
+
+module.exports.getAdviseTrip = (req, res, next) => {
+    
 }
 
 //update trip by ID
 module.exports.updateTripById = (req,res,next) => {
     const {id} = req.params;
-    const {fromStation, toStation, startTime, price} = req.body;
+    const {fromStation, toStation, startTime, company, carType, price} = req.body;
     Trip.findById(id)
         .then(trip => {
             if(!trip) return Promise.reject({
@@ -46,6 +59,8 @@ module.exports.updateTripById = (req,res,next) => {
             trip.fromStation = fromStation;
             trip.toStation = toStation;
             trip.startTime = startTime;
+            trip.company = company;
+            trip.carType = carType;
             trip.price = price;
             return trip.save()
         })

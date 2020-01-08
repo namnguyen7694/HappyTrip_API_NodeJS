@@ -33,18 +33,27 @@ module.exports.login = (req, res, next)=>{
             if (!isMatch) return Promise.reject({status:400, message: "Password incorrect"})
             const payload = {
                 email : user.email,
-                userType : user.userType
+                userType : user.userType,
+                fullName: user.fullName,
+                userId : user._id
             }
             return jwtSign(payload, keys.secret_key, {expiresIn: 3600})
         })
-        .then(token => res.status(200).json({message: "login success", token}))
+        .then(token => {
+            // res.cookie('t', token, {expire: new Date() + 9999})
+            res.status(200).json({message: "login success", token})
+        })
         .catch(err =>{
             if(!err.status) return res.status(500).json()
             return res.status(err.status).json({message:err.message})
         })    
 }
 
-
+//sign out module 
+module.exports.logOut = (req, res ) =>{
+    res.clearCookie('t');
+    return res.json({message: "Log out success"})
+}
 
 
 module.exports.uploadAvatar = (req, res, next) => {

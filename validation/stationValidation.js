@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-module.exports.validatePostStation = async (req, res, next) =>{
+module.exports.validateStation = async (req, res, next) =>{
     const {name, address, province} = req.body;
     let errors = {};
 
@@ -9,13 +9,14 @@ module.exports.validatePostStation = async (req, res, next) =>{
     } 
 
     if (!address) {
-        errors.address = "address is required"
+        errors.address = "Address is required"
     }
 
     if (!province) {
-        errors.province = "province is required"
+        errors.province = "Province is required"
     }
 
     if(_.isEmpty(errors)) return next()
     return res.status(400).json(errors);
 }
+

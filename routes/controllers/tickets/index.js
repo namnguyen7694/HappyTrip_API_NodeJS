@@ -6,5 +6,8 @@ const {authenticate, authorize} = require ('../../../middlewares/auth');
 router.post('/booking', 
     authenticate, 
     // authorize(["client"]), 
-    ticketController.createTicket)
+    ticketController.createTicket);
+
+router.get('/', authenticate, ticketController.getTickets)
+
 module.exports = router;

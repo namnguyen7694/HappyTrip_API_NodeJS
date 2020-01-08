@@ -213,6 +213,17 @@
                   GA KẾT THÚC: 
                 </strong>
                 {{toStation}}
+                <br>
+                <strong>
+                  NHÀ XE: 
+                </strong>
+                {{company}}
+                <br>
+                <strong>
+                  LOẠI XE: 
+                </strong>
+                {{carType}}
+                <br>
                 <h3>
                   Seats: {{seats}}
                 </h3>
