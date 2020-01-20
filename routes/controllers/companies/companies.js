@@ -3,8 +3,8 @@ const {Station} = require ('../../../models/Station');
 
 //create Company
 module.exports.createCompany = (req, res, next) => {
-  const { name, carType, stations } = req.body;
-  const newCompany = new Company({ name, carType, stations });
+  const { name, carType, stations, image } = req.body;
+  const newCompany = new Company({ name, carType, stations, image });
   
   newCompany
     .save()
@@ -52,7 +52,7 @@ module.exports.getAdviseCompany = async (req, res, next) => {
 //update 1 Company by ID
 module.exports.updateCompanyById = (req,res,next) => {
     const {id} = req.params;
-    const {name, carType, stations} = req.body;
+    const {name, carType, stations, image} = req.body;
     Company.findById(id)
         .then(company => {
             if(!company) return Promise.reject({
@@ -84,6 +84,7 @@ module.exports.updateCompanyById = (req,res,next) => {
             }
 
             company.name = name;
+            company.image = image;
             company.carType = carType;
             company.stations = stations;
             return company.save()

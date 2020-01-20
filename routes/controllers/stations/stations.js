@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 
 //create Station
 module.exports.createStation = (req, res,next) => {
-    const {name, address, province, companies} = req.body;
-    const newStation = new Station({name, address, province, companies})
+    const {name, address, province, image, companies} = req.body;
+    const newStation = new Station({name, address, province, image, companies})
     newStation.save()
         .then(station => {
             companies.forEach(companyId => {
@@ -36,7 +36,7 @@ module.exports.getStationById = (req,res,next) => {
 //update 1 station by ID
 module.exports.updateStationById = (req,res,next) => {
     const {id} = req.params;
-    const {name, address, province, companies} = req.body;
+    const {name, address, province, image, companies} = req.body;
     Station.findById(id)
         .then(station => {
             if(!station) return Promise.reject({
@@ -70,6 +70,7 @@ module.exports.updateStationById = (req,res,next) => {
             station.name = name;
             station.address = address;
             station.province = province;
+            station.image = image;
             station.companies = companies;
             return station.save()
         })
