@@ -4,15 +4,15 @@ const {Trip} = require ('../../../models/Trip');
 const {sendBookingTicketEmail} = require('../../../services/email/sendBookingTicket');
 
 module.exports.createTicket = (req, res, next) =>{
-    const {tripId, seatCodes} = req.body;
-    const user = req.user  //token
+    const {tripId, seatCodes, info} = req.body;
+    const user = req.user  ;
 
     Trip.findById(tripId)
-        .populate("fromStation") //xuat thong tin Obj ID sang text
+        .populate("fromStation") 
         .populate("toStation")
         .populate("company")
         .then(trip =>{
-            if (!trip) return Promise.reject({status : 404 , message: "trip not found"})  //viet trong validate
+            if (!trip) return Promise.reject({status : 404 , message: "trip not found"}) 
             const availableSeatCodes = trip.seats
                 .filter(seat => !seat.isBooked)
                 .map( seat => seat.code)
@@ -32,12 +32,15 @@ module.exports.createTicket = (req, res, next) =>{
                 tripId,
                 userId: user.userId,  
                 seats : seatCodes.map( seat => ({
-                    isBooked : true,   //ghế đã được book trong vé
+                    isBooked : true,   
                     code: seat
                 })),
+                phone : info.phone, 
+                address: info.address, 
+                note: info.note,
                 totalPrice : trip.price * seatCodes.length
             })
-            //chuyển trạng thái của ghế trong trip để không book được 
+            
             trip.seats = trip.seats.map ( seat => {
                 if (seatCodes.indexOf(seat.code) > -1) {
                     seat.isBooked = true
@@ -63,4 +66,33 @@ module.exports.getTickets = (req, res, next) => {
         .populate("tripId", "fromStation toStation company price carType")
         .then(tickets => res.status(200).json(tickets)) 
         .catch(err => res.status(500).json(err))
+}
+
+module.exports.getMyTickets = (req, res, next) => {
+    const user = req.user;
+    Ticket.find({userId : user.userId})
+        .populate("userId", "fullName email")
+        .populate("tripId", "fromStation toStation company price carType")
+        .then(tickets => res.status(200).json(tickets)) 
+        .catch(err => res.status(500).json(err))
+}
+
+module.exports.deleteTicketById = async (req,res,next) => {
+    const {id} = req.params; 
+    const ticket = await Ticket.findById(id);
+    const trip = await Trip.findById (ticket.tripId); 
+    const seatCodes = ticket.seats.map(s => s.code);
+    
+    await Ticket.deleteOne({_id: id})   
+    .then( () => {
+        trip.seats = trip.seats.map ( seat => {
+            if (seatCodes.indexOf(seat.code) > -1) {
+                seat.isBooked = false
+            }
+            return seat;
+        })
+        trip.save();
+        res.status(200).json({message: "Xóa thành công"})
+    })
+    .catch(err => res.status(500).json(err))
 }

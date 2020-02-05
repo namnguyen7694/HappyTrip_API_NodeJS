@@ -4,37 +4,32 @@ const {User} = require ('../../models/User');
 
 module.exports.validatePostUser = async (req, res, next) =>{
     const {email, password, password2, fullName} = req.body;
-
     let errors = {};
 
-    //email
     if(!email) {
-        errors.email = "Email is requied"
+        errors.email = "Chưa nhập thông tin Email"
     } else if (!validator.isEmail(email)) {
-        errors.email = "Email is invalid"
+        errors.email = "Email không hợp lệ"
     } else {
         const user = await User.findOne({email});
-        if (user) errors.email = "Email is exists"
+        if (user) errors.email = "Email đã tồn tại"
     }
 
-    //password
     if (!password) {
-        errors.password = "Password is required"
+        errors.password = "Chưa nhập mật khẩu"
     }
     else if(!validator.isLength(password, {min:6})) {
-        errors.password = "Password must have at least 6 characters"
+        errors.password = "Mật khẩu tối thiểu 6 ký tự"
     }
 
-    //confirm password
     if (!password2) {
-        errors.password2 = "Confirm password is required"
+        errors.password2 = "Chưa xác nhận lại mật khẩu"
     } else if(!validator.equals(password,password2)) {
-        errors.password2 = "Password doesn't match"
+        errors.password2 = "Mật khẩu không trùng khớp"
     }
 
-    //fullName
     if (!fullName) {
-        errors.fullName = "Full name is required"
+        errors.fullName = "Chưa nhập thông tin họ tên"
     }
 
     if(_.isEmpty(errors)) return next()

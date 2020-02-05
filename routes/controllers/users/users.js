@@ -49,12 +49,6 @@ module.exports.login = (req, res, next)=>{
         })    
 }
 
-//sign out module 
-module.exports.logOut = (req, res ) =>{
-    res.clearCookie('t');
-    return res.json({message: "Log out success"})
-}
-
 
 module.exports.uploadAvatar = (req, res, next) => {
     const { email } = req.user;
@@ -69,12 +63,12 @@ module.exports.uploadAvatar = (req, res, next) => {
 
  module.exports.getUsers = (req,res,next) => {
     User.find()
-    .then(users => res.status(200).json(users))  //status 200 getted
+    .then(users => res.status(200).json(users))  
     .catch(err => res.status(500).json(err))
 }
 
 module.exports.getUserById = (req,res,next) => {
-    const {id} = req.params;  //object co cac thuoc tinh truyen vao khi get
+    const {id} = req.params;  
     User.findById(id)
     .then(user => res.status(200).json(user))
     .catch(err => res.status(500).json(err))
@@ -109,9 +103,3 @@ module.exports.deleteUserById = (req,res,next) => {
     .catch(err => res.status(500).json(err))
 }
 
-module.exports.testPrivate = (req, res, next) =>{
-    res.status(200).json({
-        message: "access after login",
-        user: req.user
-    }) 
- }

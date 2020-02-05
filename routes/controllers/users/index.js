@@ -14,7 +14,6 @@ router.post('/',
 router.post('/login', 
   validateLoginUser, 
   userController.login); 
-router.get('/logout', authenticate, userController.logOut)
 
 router.get('/',authenticate, userController.getUsers);
 
@@ -36,9 +35,5 @@ router.post('/upload-avatar',
   authenticate, 
   uploadImage('avatar'),    //key avatar la name cua input trong body
   userController.uploadAvatar)
-
-// test private
-router.get('/private', authenticate, authorize(["admin", "client"]), userController.testPrivate);
-
 
 module.exports = router;

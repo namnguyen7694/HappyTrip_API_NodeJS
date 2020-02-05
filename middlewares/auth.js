@@ -9,7 +9,7 @@ module.exports.authenticate =  (req, res, next) => {
     verifyJwt(token, keys.secret_key)
         .then(decoded => {
             if (decoded) {
-                req.user = decoded     //tra ve req cho mdw tiep theo su dung
+                req.user = decoded 
                 return next() 
             }
         })

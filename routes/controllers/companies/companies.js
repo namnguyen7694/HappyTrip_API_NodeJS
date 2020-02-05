@@ -19,6 +19,7 @@ module.exports.createCompany = (req, res, next) => {
     })
     .catch(err => res.status(500).json(err));
 };
+
 //get all Company
 module.exports.getCompanies = (req,res,next) => {
     Company.find()
@@ -26,6 +27,7 @@ module.exports.getCompanies = (req,res,next) => {
     .then(companies => res.status(200).json(companies)) 
     .catch(err => res.status(500).json(err))
 }
+
 //get 1 Company by ID
 module.exports.getCompanyById = (req,res,next) => {
     const {id} = req.params;  //object co cac thuoc tinh truyen vao khi get

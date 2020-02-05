@@ -11,6 +11,9 @@ const TicketSchema = new mongoose.Schema({
         ref: 'User'
     },
     seats: [SeatSchema],
+    phone: {type: Number},
+    address: {type: String},
+    note: {type: String},
     totalPrice: {type: Number, required: true}
 })
 

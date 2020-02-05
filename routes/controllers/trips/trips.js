@@ -23,26 +23,29 @@ module.exports.createTrip = (req, res, next) => {
         .then(trip => res.status(201).json(trip)) //status 201 created --> send JSON respone
         .catch(err => res.status(500).json(err))
 }
+
 //get all trips
 module.exports.getTrips = (req,res,next) => {
     Trip.find()
     .populate("fromStation", "name province")
     .populate("toStation", "name province")
-    .populate("company", "name -_id")
+    .populate("company", "name image -_id")
     .then(trips => res.status(200).json(trips))  //status 200 getted
     .catch(err => res.status(500).json(err))
 }
+
 //get 1 trip by ID
 module.exports.getTripById = (req,res,next) => {
     const {id} = req.params;  //object co cac thuoc tinh truyen vao khi get
     Trip.findById(id)
     .populate("fromStation", "name")
     .populate("toStation", "name")
-    .populate("company", "name")
+    .populate("company", "name image")
     .then(trip => res.status(200).json(trip))
     .catch(err => res.status(500).json(err))
 }
 
+// search Trip
 module.exports.getAdviseTrip = (req, res, next) => {
     
 }
@@ -70,6 +73,7 @@ module.exports.updateTripById = (req,res,next) => {
             return res.status(500).json(err)
         })
 }
+
 //delete 1 Trip by ID
 module.exports.deleteTripById = (req,res,next) => {
     const {id} = req.params;  //object co cac thuoc tinh truyen vao khi get
