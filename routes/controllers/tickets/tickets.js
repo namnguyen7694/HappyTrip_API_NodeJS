@@ -84,15 +84,6 @@ module.exports.getTicketById = (req, res, next) => {
     .catch( err => res.status(500).json(err))
 };
 
-module.exports.getMyTickets = (req, res, next) => {
-    const user = req.user;
-    Ticket.find({userId : user.userId})
-        .populate("userId", "fullName email")
-        .populate("tripId", "fromStation toStation company price carType")
-        .then(tickets => res.status(200).json(tickets)) 
-        .catch(err => res.status(500).json(err))
-}
-
 module.exports.deleteTicketById = async (req,res,next) => {
     const {id} = req.params; 
     const ticket = await Ticket.findById(id);
