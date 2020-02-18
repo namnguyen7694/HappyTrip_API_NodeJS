@@ -1,6 +1,5 @@
 const _ = require('lodash');
 const validator = require('validator');
-const {User} = require ('../../models/User');
 
 module.exports.validateUpdateUser =  (req, res, next) =>{
     const {password, password2, fullName} = req.body;
@@ -9,22 +8,21 @@ module.exports.validateUpdateUser =  (req, res, next) =>{
 
     //password
     if (!password) {
-        errors.password = "Password is required"
+        errors.password = "Chưa nhập mật khẩu"
     }
-    else if(!validator.isLength(password, {min:6})) {
-        errors.password = "Password must have at least 6 characters"
-    }
+    
 
     //confirm password
     if (!password2) {
-        errors.password2 = "Confirm password is required"
-    } else if(!validator.equals(password,password2)) {
-        errors.password2 = "Password doesn't match"
+        errors.password2 = "Chưa nhập mật khẩu mới"
+    }
+    else if(!validator.isLength(password2, {min:6})) {
+        errors.password = "Mật khẩu phải chứa tối thiểu 6 ký tự"
     }
 
     //fullName
     if (!fullName) {
-        errors.fullName = "Full name is required"
+        errors.fullName = "Chưa nhập họ tên"
     }
 
     if(_.isEmpty(errors)) return next()

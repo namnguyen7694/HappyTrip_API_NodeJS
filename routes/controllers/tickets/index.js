@@ -11,6 +11,7 @@ router.post('/booking',
     ticketController.createTicket);
 
 router.get('/', authenticate, authorize(["admin"]),  ticketController.getTickets)
+router.get('/:id', authenticate,  ticketController.getTicketById)
 router.get('/myticket', authenticate, authorize(["client"]),  ticketController.getMyTickets)
 router.delete('/:id', authenticate, ticketController.deleteTicketById)
 

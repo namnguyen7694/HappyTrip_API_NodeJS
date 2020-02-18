@@ -1,7 +1,7 @@
 const {Ticket} =require ('../../../models/Ticket');
-const {User} = require('../../../models/User');
 const {Trip} = require ('../../../models/Trip');
 const {sendBookingTicketEmail} = require('../../../services/email/sendBookingTicket');
+const _ = require ('lodash')
 
 module.exports.createTicket = (req, res, next) =>{
     const {tripId, seatCodes, info} = req.body;
@@ -62,11 +62,27 @@ module.exports.createTicket = (req, res, next) =>{
 
 module.exports.getTickets = (req, res, next) => {
     Ticket.find()
-        .populate("userId", "fullName email")
-        .populate("tripId", "fromStation toStation company price carType")
-        .then(tickets => res.status(200).json(tickets)) 
-        .catch(err => res.status(500).json(err))
-}
+    .populate("userId", "fullName email")
+    .populate("tripId", "company toStation fromStation price carType")
+    .then( tickets => res.status(200).json(tickets))
+    .catch( err => res.status(500).json(err))
+};
+
+module.exports.getTicketById = (req, res, next) => {
+    const {id} = req.params;
+    Ticket.findById(id)
+    .populate("userId", "fullName email")
+    .populate("tripId", "company toStation fromStation price carType")
+    .then(ticket => {
+        const trip = Trip.findById(ticket.tripId._id)
+            .populate("fromStation", "name province")
+            .populate("toStation", "name province")
+            .populate("company", "name")
+        return Promise.all([ticket, trip])
+    })
+    .then( result => res.status(200).json(result))
+    .catch( err => res.status(500).json(err))
+};
 
 module.exports.getMyTickets = (req, res, next) => {
     const user = req.user;

@@ -9,8 +9,6 @@ module.exports.validateLoginUser = (req, res, next) =>{
     //email
     if(!email) {
         errors.email = "Chưa nhập thông tin Email"
-    } else if (!validator.isEmail(email)) {
-        errors.email = "Email không hợp lệ"
     } 
     //password
     if (!password) {

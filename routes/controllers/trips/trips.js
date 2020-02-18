@@ -29,17 +29,17 @@ module.exports.getTrips = (req,res,next) => {
     Trip.find()
     .populate("fromStation", "name province")
     .populate("toStation", "name province")
-    .populate("company", "name image -_id")
-    .then(trips => res.status(200).json(trips))  //status 200 getted
+    .populate("company", "name image")
+    .then(trips => res.status(200).json(trips))  
     .catch(err => res.status(500).json(err))
 }
 
 //get 1 trip by ID
 module.exports.getTripById = (req,res,next) => {
-    const {id} = req.params;  //object co cac thuoc tinh truyen vao khi get
+    const {id} = req.params; 
     Trip.findById(id)
-    .populate("fromStation", "name")
-    .populate("toStation", "name")
+    .populate("fromStation", "name province")
+    .populate("toStation", "name province")
     .populate("company", "name image")
     .then(trip => res.status(200).json(trip))
     .catch(err => res.status(500).json(err))

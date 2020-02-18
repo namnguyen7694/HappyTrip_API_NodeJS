@@ -7,7 +7,7 @@
     "start": "node server.js",
     "start:local": "set NODE_ENV=local& nodemon server.js",
     "start:staging": "set NODE_ENV=staging& node server.js",
-    "debug": "nodemon server.js",
+    "debug": "set NODE_ENV=local& nodemon server.js",
     "debug:log": "set DEBUG=* & nodemon server.js"
   },
   "author": "\"Nam Nguyen\"",

@@ -19,10 +19,9 @@ router.get('/',authenticate, userController.getUsers);
 
 router.get('/:id',userController.getUserById);
 
-router.put('/:id', 
+router.put('/updatemyprofile', 
   validateUpdateUser, 
-  authenticate, 
-  authorize(["admin"]), 
+  authenticate,
   userController.updateUserById );
 
 router.delete('/:id',
