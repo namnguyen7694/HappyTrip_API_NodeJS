@@ -4,9 +4,9 @@ module.exports.validateStation = async (req, res, next) =>{
     const {name, address, province} = req.body;
     let errors = {};
 
-    if(!name) {
-        errors.name = "Station's name is requied"
-    } 
+    // if(!name) {
+    //     errors.name = "Station's name is requied"
+    // } 
 
     if (!address) {
         errors.address = "Address is required"
